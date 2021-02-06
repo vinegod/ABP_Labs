@@ -1,3 +1,5 @@
 .vscode/tasks.json
 .vscode/launch.json
 main
+vscode/launch.json
+vscode/tasks.json
