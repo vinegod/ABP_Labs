@@ -34,9 +34,13 @@ Matrix operator*(const Matrix& one, const Matrix& two);
 Matrix Transp(const Matrix& matrix);
 Matrix MatrixE(const Matrix&);
 
-double operator*(const vector<double>& one, const vector<double>& two);
+Matrix operator*(const vector<double>& one, const vector<double>& two);
+Matrix operator*(const vector<double>& one, const Matrix& two);
+Matrix operator*(const Matrix& one, const vector<double>& two);
+Matrix operator*(double one, const Matrix& two);
+
+Matrix operator/(const Matrix& matrix, double x);
 const vector<double> operator-(const vector<double>& one, const vector<double>& two);
-const vector<double> operator*(const double one, const vector<double>& two);
 
 std::istream& operator>>(std::istream& in, Matrix& matrix);
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix);

@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include <cmath>
 
 
 Matrix::Matrix() {
@@ -131,28 +132,46 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
     }
     out << std::endl;
   }
-
   return out;
 }
 
-double operator*(const vector<double>& one, const vector<double>& two)
+Matrix operator*(const vector<double>& one, const vector<double>& two)
 {
-  double result = 0;
-  for (uint16_t i = 0; i < one.size(); i++)
-    result += one[i] * two[i];
+  Matrix first(one.size(), 1);
+  for (int i = 0; i < one.size(); i++)
+    first[i][0] = one[i];
+  
+  Matrix second(1, two.size());
+  for (int i = 0; i < two.size(); i++)
+    second[0][i] = two[i];
+
+  return first*second;
+}
+
+Matrix operator*(const vector<double>& one, const Matrix& two) {
+  Matrix first(1, one.size());
+  for (int i = 0; i < one.size(); i++)
+    first[0][i] = one[i];
+  return first*two;
+}
+
+Matrix operator*(const Matrix& one, const vector<double>& two) {
+  Matrix second(two.size(), 1);
+  for (int i = 0; i < two.size(); i++)
+    second[i][0] = two[i];
+
+  return one*second;
+}
+
+Matrix operator*(double one, const Matrix& two) {
+  Matrix result (two.GetNumRows(), two.GetNumColumns());
+  for(uint16_t i = 0; i < two.GetNumRows(); i++)
+    for (int j = 0; j < two.GetNumColumns(); j++)
+    result[i][j]=one*two[i][j];
+
   return result;
 }
-const vector<double> operator*(const double one, const vector<double>& two)
-{
-  vector<double> result(two.size());
-  for (uint16_t i = 0; i < two.size(); i++)
-    result[i]=one*two[i];
-  return result;
-}
-vector<double> projection(const vector<double>& b, const vector<double>& a)
-{
-  return (a * b) / (b * b) * b;
-}
+
 const vector<double> operator-(const vector<double>& one, const vector<double>& two)
 {
   vector<double> result(one.size());

@@ -15,32 +15,28 @@ void fill_matrixs(Matrix &X, Matrix& Y)
     data >> Y[i][0];
   }
 }
+vector<double> int_coef(vector<double> yt, const vector<double>& x, const Matrix& O);
 
 int main()
 {
   Matrix X(100, 7);
   Matrix Y(100, 1);
   fill_matrixs(X, Y);
-  Matrix XT = Transp(X);
-  Matrix XTX = XT*X;
-  Matrix result = MatrixE(XTX) * XT * Y;
-  std::cout << result;
-
+  Matrix result = MatrixE(Transp(X)*X) * Transp(X) * Y;
+  Matrix P(7, 7);
+  for (int i = 0; i < 7; i++)
+    P[i][i] = 1'000'000;
+  Matrix O(7, 1);
+  for (int i = 0; i < 100; i++) {
+    P = P + (-1.0) * (P * (X[i] * X[i]) * P) / (1 + (X[i] * P * X[i])[0][0]);
+    O = O + (P * X[i]) * int_coef(Y[i], X[i], O);
+  }
+  std::cout << /*"P:\n" << P <<*/ "Omega:\n" << O << "Etalon:\n" << result;
 }
 
-void func()
-{
-  int p = 3, q = 2;
-  std::default_random_engine generator;
-  std::normal_distribution<double> distribution(5.0, 2.0);
-  double mass[10] = {};
-  for (int i = 0; i < 1000; ++i)
-  {
-    double number = distribution(generator);
-    if ((number >= 0.0) && (number < 10.0))
-      ++mass[int(number)];
-  }
-  vector<double> a({mass[0], mass[1], mass[2]});
-  for (auto &v : mass)
-    std::cout << v << ' ';
+vector<double> int_coef(vector<double> yt, const vector<double>& x, const Matrix& O) {
+  Matrix xO = x*O;
+  for (int i = 0; i < yt.size(); i++)
+    yt[i] -= xO[0][i];
+  return yt;
 }
