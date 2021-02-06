@@ -2,5 +2,5 @@
 
 auto main() -> int 
 {
-    
+    std::cout << "Hello!\n";
 }
