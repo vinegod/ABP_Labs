@@ -39,6 +39,9 @@ Matrix operator*(const vector<double>& one, const Matrix& two);
 Matrix operator*(const Matrix& one, const vector<double>& two);
 Matrix operator*(double one, const Matrix& two);
 
+Matrix row_matrix(const vector<double>& v);
+Matrix column_matrix(const vector<double>& v);
+
 Matrix operator/(const Matrix& matrix, double x);
 const vector<double> operator-(const vector<double>& one, const vector<double>& two);
 

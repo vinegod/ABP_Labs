@@ -228,3 +228,16 @@ Matrix MatrixE(const Matrix& matrix)
             result[i][j] = temp[i][matrix.GetNumColumns() + j];
     return result;
 }
+
+Matrix row_matrix(const vector<double> &v) {
+  Matrix result(v.size(), 1);
+  for (uint16_t i = 0; i < v.size(); i++)
+    result[i][0] = v[i];
+  return result;
+}
+Matrix column_matrix(const vector<double> &v) {
+  Matrix result(1, v.size());
+  for (uint16_t i = 0; i < v.size(); i++)
+    result[0][i] = v[i];
+  return result;
+}
