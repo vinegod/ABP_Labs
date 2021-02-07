@@ -135,48 +135,12 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
   return out;
 }
 
-Matrix operator*(const vector<double>& one, const vector<double>& two)
-{
-  Matrix first(one.size(), 1);
-  for (int i = 0; i < one.size(); i++)
-    first[i][0] = one[i];
-  
-  Matrix second(1, two.size());
-  for (int i = 0; i < two.size(); i++)
-    second[0][i] = two[i];
-
-  return first*second;
-}
-
-Matrix operator*(const vector<double>& one, const Matrix& two) {
-  Matrix first(1, one.size());
-  for (int i = 0; i < one.size(); i++)
-    first[0][i] = one[i];
-  return first*two;
-}
-
-Matrix operator*(const Matrix& one, const vector<double>& two) {
-  Matrix second(two.size(), 1);
-  for (int i = 0; i < two.size(); i++)
-    second[i][0] = two[i];
-
-  return one*second;
-}
-
 Matrix operator*(double one, const Matrix& two) {
   Matrix result (two.GetNumRows(), two.GetNumColumns());
   for(uint16_t i = 0; i < two.GetNumRows(); i++)
     for (int j = 0; j < two.GetNumColumns(); j++)
     result[i][j]=one*two[i][j];
 
-  return result;
-}
-
-const vector<double> operator-(const vector<double>& one, const vector<double>& two)
-{
-  vector<double> result(one.size());
-  for (uint16_t i = 0; i < one.size(); i++)
-    result[i] = one[i] - two[i];
   return result;
 }
 
@@ -213,6 +177,7 @@ void Gauss(Matrix& matrix)
                 matrix[j][k] -= e*matrix[i][k];
         }
 }
+
 Matrix MatrixE(const Matrix& matrix)
 {
     Matrix temp(matrix.GetNumRows(), 2*matrix.GetNumColumns());

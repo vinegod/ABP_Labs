@@ -48,33 +48,25 @@ void fill_matrixs(Matrix &X, Matrix& Y)
   }
   data.close();
 }
-vector<double> int_coef(vector<double> yt, const vector<double>& x, const Matrix& O);
 
 int main()
 {
   srand(time(NULL));
-  const int N = 100;
+  const int N = 1000;
   const int params_count = 8;
-  create_data(N);
+  //create_data(N);
   Matrix X(N, params_count);
   Matrix Y(N, 1);
   fill_matrixs(X, Y);
   Matrix result = MatrixE(Transp(X)*X) * Transp(X) * Y;
-  std::cout << result;
   Matrix P(params_count, params_count);
   for (int i = 0; i < params_count; i++)
-    P[i][i] = 1'000'000;
+    P[i][i] = 1'000;
   Matrix O(params_count, 1);
   for (int i = 0; i < N; i++) {
-    P = P + (-1.0) * (P * (X[i] * X[i]) * P) / (1 + (X[i] * P * X[i])[0][0]);
-    O = O + (P * X[i]) * int_coef(Y[i], X[i], O);
+    P = P + (-1.0) * (P * row_matrix(X[i]) * column_matrix(X[i]) * P) /
+      (1 + (column_matrix(X[i]) * P * row_matrix(X[i]))[0][0]);
+    O = O + P * row_matrix(X[i]) * (row_matrix(Y[i]) + (-1.0) * column_matrix(X[i]) * O);
   }
   std::cout << "Omega:\n" << O << "Etalon:\n" << result;
-}
-
-vector<double> int_coef(vector<double> yt, const vector<double>& x, const Matrix& O) {
-  Matrix xO = x*O;
-  for (int i = 0; i < yt.size(); i++)
-    yt[i] -= xO[0][i];
-  return yt;
 }
