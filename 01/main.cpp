@@ -52,6 +52,8 @@ void create_data(const int N) {
                        {0.5},
                        {0.5},
                        {0}}); //Параметры, которые были заданы
+  const uint16_t count_A = 3;
+  //const uint16_t count_B = 3;
 
   Matrix X(N, params.GetNumRows());
   X[0][0] = 1;
@@ -64,10 +66,10 @@ void create_data(const int N) {
     X[i][0] = 1;
     X[i][1] = Y[i - 1][0];
     int j;
-    for (j = 2; j < X.GetNumColumns() / 2; j++)
+    for (j = 2; j < 1 + count_A; j++)
       X[i][j] = X[i - 1][j - 1];
     X[i][j] = (rand() % 5 - 2.5) * 1.0 / j;
-    for (j++; j < X.GetNumColumns(); j++)
+    for (++j; j < X.GetNumColumns(); j++)
       X[i][j] = X[i - 1][j - 1];
     Y[i][0] = (column_matrix(X[i]) * params)[0][0];
   }
@@ -98,7 +100,7 @@ std::pair<double, double> Akaiki(Matrix &X, Matrix &Y, Matrix &params) {
   int N = X.GetNumRows();
   double IKA = 0;
   for (int i = 0; i < N; i++) {
-    IKA += pow((column_matrix(X[i]) * params + (-1.0) * row_matrix(Y[i]))[0][0],2);
+    IKA += pow((column_matrix(X[i]) * params + (-1.0) * row_matrix(Y[i]))[0][0], 2);
   }
 
   return {IKA, (N * log(IKA) / log(2.7182818284) + 2 * N)};
