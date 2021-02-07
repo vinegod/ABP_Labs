@@ -9,8 +9,8 @@
 
 void create_data(const int N);
 void fill_matrixs(Matrix &X, Matrix &Y);
-Matrix count_omega(Matrix &X, Matrix &Y, int params_count, int betta);
-std::pair<double, double> Akaiki(Matrix &, Matrix &, Matrix &);
+Matrix count_omega(const Matrix &X, const Matrix &Y, int params_count, int betta);
+std::pair<double, double> Akaiki(const Matrix &, const Matrix &, const Matrix &);
 
 int main() {
   srand(time(NULL));
@@ -81,7 +81,7 @@ void create_data(const int N) {
   data.close();
 }
 
-Matrix count_omega(Matrix &X, Matrix &Y, int params_count, int betta) {
+Matrix count_omega(const Matrix &X, const Matrix &Y, int params_count, int betta) {
   Matrix P(params_count, params_count);
   for (int i = 0; i < params_count; i++)
     P[i][i] = betta;
@@ -95,7 +95,7 @@ Matrix count_omega(Matrix &X, Matrix &Y, int params_count, int betta) {
   return O;
 }
 
-std::pair<double, double> Akaiki(Matrix &X, Matrix &Y, Matrix &params) {
+std::pair<double, double> Akaiki(const Matrix &X, const Matrix &Y, const Matrix &params) {
   int N = X.GetNumRows();
   double IKA = 0;
   for (int i = 0; i < N; i++) {
