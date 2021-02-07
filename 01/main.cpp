@@ -6,6 +6,36 @@
 
 //using namespace std;
 
+void create_data(const int N);
+void fill_matrixs(Matrix &X, Matrix& Y);
+Matrix count_omega(Matrix&, Matrix&, int params_count, int betta);
+
+int main()
+{
+  srand(time(NULL));
+  const int N = 1000;
+  const int params_count = 8;
+  //create_data(N);
+  Matrix X(N, params_count);
+  Matrix Y(N, 1);
+  fill_matrixs(X, Y);
+  Matrix result = MatrixE(Transp(X)*X) * Transp(X) * Y;
+  Matrix O = count_omega(X, Y, params_count, 1000);
+  std::cout << "Omega:\n" << O << "Etalon:\n" << result;
+}
+
+void fill_matrixs(Matrix &X, Matrix& Y)
+{
+  std::ifstream data("generated_data.txt");
+  for (int i = 0; i < X.GetNumRows(); i++)
+  {
+    for (int j = 0; j < X.GetNumColumns(); j++)
+      data >> X[i][j];
+    data >> Y[i][0];
+  }
+  data.close();
+}
+
 void create_data(const int N) {
   const Matrix params({ {0}, {0.22}, {-0.18}, {-0.8}, {1}, {0.5}, {0.5}, {0} });
 
@@ -37,36 +67,15 @@ void create_data(const int N) {
   data.close();
 }
 
-void fill_matrixs(Matrix &X, Matrix& Y)
-{
-  std::ifstream data("generated_data.txt");
-  for (int i = 0; i < X.GetNumRows(); i++)
-  {
-    for (int j = 0; j < X.GetNumColumns(); j++)
-      data >> X[i][j];
-    data >> Y[i][0];
-  }
-  data.close();
-}
-
-int main()
-{
-  srand(time(NULL));
-  const int N = 1000;
-  const int params_count = 8;
-  //create_data(N);
-  Matrix X(N, params_count);
-  Matrix Y(N, 1);
-  fill_matrixs(X, Y);
-  Matrix result = MatrixE(Transp(X)*X) * Transp(X) * Y;
+Matrix count_omega(Matrix& X, Matrix& Y, int params_count, int betta){
   Matrix P(params_count, params_count);
   for (int i = 0; i < params_count; i++)
-    P[i][i] = 1'000;
+    P[i][i] = betta;
   Matrix O(params_count, 1);
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i < X.GetNumRows(); i++) {
     P = P + (-1.0) * (P * row_matrix(X[i]) * column_matrix(X[i]) * P) /
       (1 + (column_matrix(X[i]) * P * row_matrix(X[i]))[0][0]);
     O = O + P * row_matrix(X[i]) * (row_matrix(Y[i]) + (-1.0) * column_matrix(X[i]) * O);
   }
-  std::cout << "Omega:\n" << O << "Etalon:\n" << result;
+  return O;
 }
