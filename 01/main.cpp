@@ -4,14 +4,14 @@
 #include <fstream>
 #include <iostream>
 
-void create_data(const int N, uint16_t, uint16_t);
+void create_data(const int N, uint16_t, uint16_t, bool random_data);
 void search_params(int N, int count_A, int count_B, int);
 
 int main() {
   srand(time(NULL));
   const int N = 1000;
   const int betta = 1'000;
-  create_data(N, 3, 3);
+  create_data(N, 3, 3, 0);
   for (int i = 1; i < 4; i++)
     for (int j = 1; j < 4; j++) {
       std::cout << "For APKC(" << i << ", " << j << "):\n";
@@ -131,24 +131,28 @@ std::pair<double, double> Akaiki(const Matrix &X, const Matrix &Y, const Matrix 
   return {IKA, (N * log(IKA) / log(2.7182818284) + 2 * N)};
 }
 
-void create_data(const int N, uint16_t count_A, uint16_t count_B) {
-  /*const Matrix params({{0},
-                       {0.22},
-                       //{-0.18},
-                       //{0.08},
-                       {1},
-                       //{0.5},
-                       //{0.5},
-                       {0}}); //Параметры, которые были заданы
-  // const uint16_t count_B = 3;*/
-  vector<double> parameters;
-  for (uint16_t i = 0; i < count_A + 1; i++)
-    parameters.push_back( (rand() % 1000 - 500) * 1.0 / 1000);
-  parameters.push_back(1);
-  for (uint16_t i = 0; i < count_B; i++)
-    parameters.push_back( (rand() % 1000 - 500) * 1.0 / 1000);
-  const Matrix params = row_matrix(parameters);
-  std::cout << "APKC(" << count_A << ", " << count_B << "):\n" << params << '\n';
+void create_data(const int N, uint16_t count_A, uint16_t count_B, bool random_data) {
+  Matrix params;
+  if (random_data) {
+    vector<double> parameters;
+    for (uint16_t i = 0; i < count_A + 1; i++)
+      parameters.push_back((rand() % 1000 - 500) * 1.0 / 1000);
+    parameters.push_back(1);
+    for (uint16_t i = 0; i < count_B; i++)
+      parameters.push_back((rand() % 1000 - 500) * 1.0 / 1000);
+    params = row_matrix(parameters);
+    std::cout << "APKC(" << count_A << ", " << count_B << "):\n"
+            << params << '\n';
+  } else {
+    params = Matrix({{0},
+                     {0.22},
+                     {-0.18},
+                     {0.08},
+                     {1},
+                     {0.5},
+                     {0.5},
+                     {0}}); //Параметры, которые были заданы
+  }
   Matrix X(N, params.GetNumRows());
   X[0][0] = 1;
 
