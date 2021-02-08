@@ -1,20 +1,10 @@
 #include "matrix.h"
-#include <asm-generic/errno.h>
 #include <cmath>
 #include <ctime>
 #include <fstream>
 #include <iostream>
 
-//#include <random>
-// using namespace std;
-
 void create_data(const int N, uint16_t, uint16_t);
-void fill_matrixs(Matrix &X, Matrix &Y);
-int create_and_fill_from_file(int count_A, int count_B, Matrix &, Matrix &Y);
-void fill_X(Matrix &X, const Matrix &Eps, const Matrix &Y, int, int);
-Matrix change_Y_size(int, const Matrix &, bool);
-Matrix count_omega(const Matrix &X, const Matrix &Y, int params_count, int betta);
-std::pair<double, double> Akaiki(const Matrix &, const Matrix &, const Matrix &);
 void search_params(int N, int count_A, int count_B, int);
 
 int main() {
@@ -30,6 +20,12 @@ int main() {
     }
   //search_params(3, 2, N);
 }
+
+int create_and_fill_from_file(int count_A, int count_B, Matrix &, Matrix &Y);
+void fill_X(Matrix &X, const Matrix &Eps, const Matrix &Y, int, int);
+Matrix change_Y_size(int, const Matrix &, bool);
+Matrix count_omega(const Matrix &X, const Matrix &Y, int params_count, int betta);
+std::pair<double, double> Akaiki(const Matrix &, const Matrix &, const Matrix &);
 
 void search_params(int count_A, int count_B, int _N, int betta) {
   const int params_count = count_A + count_B + 2;
@@ -50,25 +46,10 @@ void search_params(int count_A, int count_B, int _N, int betta) {
             << "Akaiki for PMHK: " << Akaiki_PMHK.second << '\n';
 }
 
-/*void fill_matrixs(Matrix &X, int count_A, Matrix &Y) {
-  std::ifstream X_data("X_data.txt");
-  std::ifstream Eps_data("Eps_data.txt");
-  std::ifstream Y_data("Y_data.txt");
-  for (int i = 0; i < X.GetNumRows(); i++) {
-    for (int j = 0; j < 2 + count_A; j++)
-      X_data >> X[i][j];
-    for (int j = 2 + count_A; j < X.GetNumColumns(); j++)
-      Eps_data >> X[i][j];
-    Y_data >> Y[i][0];
-  }
-  X_data.close();
-  Eps_data.close();
-  Y_data.close();
-}*/
-
 int create_and_fill_from_file(int count_A, int count_B, Matrix &Eps, Matrix &Y) {
   std::ifstream Eps_data("Eps_data.txt");
   std::ifstream Y_data("Y_data.txt");
+
   vector<double> y;
   double temp;
   while (Y_data >> temp) {
@@ -80,6 +61,9 @@ int create_and_fill_from_file(int count_A, int count_B, Matrix &Eps, Matrix &Y) 
   }
   Eps = row_matrix(eps);
   Y = row_matrix(y);
+
+  Eps_data.close();
+  Y_data.close();
   return std::min(y.size(), eps.size()) - std::max(count_A, count_B + 1);
 }
 
