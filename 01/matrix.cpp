@@ -113,7 +113,7 @@ std::ostream &operator<<(std::ostream &out, const Matrix &matrix) {
   for (int row = 0; row < matrix.GetNumRows(); row++) {
     for (int column = 0; column < matrix.GetNumColumns(); column++) {
       if (column > 0) {
-        out << " ";
+        out << '\t';
       }
       out << matrix[row][column];
     }
